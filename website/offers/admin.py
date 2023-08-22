@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import RealEstateModel
 
-# Register your models here.
+
+@admin.register(RealEstateModel)
+class RealEstateAdmin(admin.ModelAdmin):
+    pass
