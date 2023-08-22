@@ -114,6 +114,19 @@ class NameServiceModel(BaseSlugModel):
         verbose_name = "Наименование услуги"
         verbose_name_plural = "Наименование услуг"
 
+
+class NameCurrencyModel(BaseSlugModel):
+    """ForeignKey. Наименование валюты"""
+
+    currency = models.CharField(max_length=64, verbose_name='Наименование валюты')
+
+    def __str__(self):
+        return f'{self.currency}'
+
+    class Meta:
+        verbose_name = "Наименование валюты"
+        verbose_name_plural = "Наименование валют"
+
 # старт маин моделей
 
 
@@ -173,6 +186,7 @@ class RealEstateModel(BaseModel):
     kitchen = models.BooleanField(default=False, verbose_name='Нал кухни')
     wi_fi = models.BooleanField(default=False, verbose_name='Нал wifi')
     air_conditioner = models.BooleanField(default=False, verbose_name='Нал кондера')
+    washing_machine = models.BooleanField(default=False, verbose_name='Нал стир машинки')
     sleeper = models.PositiveSmallIntegerField(choices=CHOICES_SIX, verbose_name='Кол-во спальных мест')
     commission = models.PositiveSmallIntegerField(null=True, blank=True, default=0, verbose_name='Комиссия')
     photo = models.ImageField(upload_to='photos/estate', verbose_name='Фото', null=True, blank=True)
@@ -243,3 +257,44 @@ class ServicesModel(BaseModel):
     class Meta:
         verbose_name = "Услуга"
         verbose_name_plural = "Услуги"
+
+
+class BuySellModel(BaseModel):
+    """Покупка/продажа"""
+
+    CHOICES_UNIT = (
+        (1, 'Шт'),
+        (2, "Кг"),
+        (3, "Гр")
+    )
+    name_product = models.CharField(max_length=64, verbose_name='Название продукта')
+    unit = models.CharField(choices=CHOICES_UNIT, max_length=1, verbose_name="Единица измерения")
+    delivery = models.BooleanField(default=False, verbose_name='Доставка')
+
+
+# class CurrencyModel(BaseModel):
+#     """Валютные пары
+#     Доделать логику"""
+#
+#     name_currency_1 = models.ForeignKey(NameCurrencyModel, on_delete=models.PROTECT)
+#     name_currency_2 = models.ForeignKey(NameCurrencyModel, on_delete=models.PROTECT)
+#     price_2 = models.PositiveIntegerField(default=0, verbose_name='Цена')
+#     price_3 = models.PositiveIntegerField(default=0, verbose_name='Цена')
+#     border_1 = models.PositiveIntegerField(default=0, verbose_name='Граница изменения курса')
+#     border_2 = models.PositiveIntegerField(default=0, verbose_name='Граница изменения курса')
+#     delivery = models.BooleanField(default=False, verbose_name='Доставка')
+
+
+class FoodModel(BuySellModel):
+    """Домашняя еда"""
+    pass
+
+
+class TaxiModel(BuySellModel):
+    """Taxi"""
+    pass
+
+
+class TripModel(BuySellModel):
+    """Экскурсии"""
+    pass
