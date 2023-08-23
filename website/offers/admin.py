@@ -17,8 +17,14 @@ from .models import (
     BuySellModel,
     FoodModel,
     TaxiModel,
-    TripModel
+    TripModel,
+    CurrencyModel
 )
+
+
+@admin.register(CurrencyModel)
+class CurrencyAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(RealEstateModel)

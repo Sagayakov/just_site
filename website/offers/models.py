@@ -36,6 +36,10 @@ class LocationModel(models.Model):
     def __str__(self):
         return f'{self.location}'
 
+    class Meta:
+        verbose_name = "F Локация"
+        verbose_name_plural = "F Локации"
+
 
 class MarkTransportModel(BaseSlugModel):
     """ForeignKey. Марка трансопрта"""
@@ -46,8 +50,8 @@ class MarkTransportModel(BaseSlugModel):
         return f'{self.mark_tr}'
 
     class Meta:
-        verbose_name = "Марка"
-        verbose_name_plural = "Марки"
+        verbose_name = "F Транспорта марка"
+        verbose_name_plural = "F Транспорта марки"
 
 
 class ModelTransportModel(BaseSlugModel):
@@ -59,8 +63,8 @@ class ModelTransportModel(BaseSlugModel):
         return f'{self.model_tr}'
 
     class Meta:
-        verbose_name = "Модель"
-        verbose_name_plural = "Модели"
+        verbose_name = "F Транспорта модель"
+        verbose_name_plural = "F Транспорта модели"
 
 
 class ThemeEventModel(BaseSlugModel):
@@ -72,34 +76,34 @@ class ThemeEventModel(BaseSlugModel):
         return f'{self.theme}'
 
     class Meta:
-        verbose_name = "Тематика"
-        verbose_name_plural = "Тематики"
+        verbose_name = "F Тематика"
+        verbose_name_plural = "F Тематики"
 
 
 class VarietyVisaModel(BaseSlugModel):
     """ForeignKey. Вид визы"""
 
-    variety = models.CharField(max_length=64, verbose_name='Вид визы') # туристическая, бизнес или др.
+    variety = models.CharField(max_length=64, verbose_name='Вид визы')  # туристическая, бизнес или др.
 
     def __str__(self):
         return f'{self.variety}'
 
     class Meta:
-        verbose_name = "Вид визы"
-        verbose_name_plural = "Виды виз"
+        verbose_name = "F Виза вид"
+        verbose_name_plural = "F Визы вид"
 
 
 class ValidityVisaModel(BaseSlugModel):
     """ForeignKey. Продолжительность визы"""
 
-    validity = models.CharField(max_length=64, verbose_name='Продолжительность визы') # 30 дней\1 год или др
+    validity = models.CharField(max_length=64, verbose_name='Продолжительность визы')  # 30 дней\1 год или др
 
     def __str__(self):
         return f'{self.validity}'
 
     class Meta:
-        verbose_name = "Продолжительность визы"
-        verbose_name_plural = "Продолжительность виз"
+        verbose_name = "F Виза продолжительность"
+        verbose_name_plural = "F Визы продолжительность"
 
 
 class NameServiceModel(BaseSlugModel):
@@ -111,8 +115,8 @@ class NameServiceModel(BaseSlugModel):
         return f'{self.validity}'
 
     class Meta:
-        verbose_name = "Наименование услуги"
-        verbose_name_plural = "Наименование услуг"
+        verbose_name = "F Наименование услуги"
+        verbose_name_plural = "F Наименование услуг"
 
 
 class NameCurrencyModel(BaseSlugModel):
@@ -124,8 +128,9 @@ class NameCurrencyModel(BaseSlugModel):
         return f'{self.currency}'
 
     class Meta:
-        verbose_name = "Наименование валюты"
-        verbose_name_plural = "Наименование валют"
+        verbose_name = "F Наименование валюты"
+        verbose_name_plural = "F Наименование валют"
+
 
 # старт маин моделей
 
@@ -136,7 +141,11 @@ class EventPosterModel(BaseModel):
     date = models.DateTimeField(verbose_name='Дата и время')
     themes = models.ForeignKey(ThemeEventModel, on_delete=models.PROTECT, verbose_name='Тематика')
     photo = models.ImageField(upload_to='photos/event', verbose_name='Фото', null=True, blank=True)
+
     # add_photo = 'later'
+
+    def __str__(self):
+        return f'{self.themes} - {self.date}'
 
     class Meta:
         verbose_name = "Мероприятие"
@@ -149,7 +158,11 @@ class VisaModel(BaseModel):
     variety = models.ForeignKey(VarietyVisaModel, on_delete=models.PROTECT, verbose_name='Вид визы')
     validity = models.ForeignKey(ValidityVisaModel, on_delete=models.PROTECT, verbose_name='Продолжительность визы')
     photo = models.ImageField(upload_to='photos/visa', verbose_name='Фото', null=True, blank=True)
+
     # add_photo = 'later'
+
+    def __str__(self):
+        return f'{self.variety} - {self.validity}'
 
     class Meta:
         verbose_name = "Документ"
@@ -184,12 +197,15 @@ class RealEstateModel(BaseModel):
     floor = models.PositiveSmallIntegerField(choices=CHOICES_TEN, verbose_name='Этаж')
     max_floor = models.PositiveSmallIntegerField(choices=CHOICES_TEN, verbose_name='Этажность здания')
     kitchen = models.BooleanField(default=False, verbose_name='Нал кухни')
-    wi_fi = models.BooleanField(default=False, verbose_name='Нал wifi')
+    wi_fi = models.BooleanField(default=False, verbose_name='Нал wi-fi')
     air_conditioner = models.BooleanField(default=False, verbose_name='Нал кондера')
     washing_machine = models.BooleanField(default=False, verbose_name='Нал стир машинки')
     sleeper = models.PositiveSmallIntegerField(choices=CHOICES_SIX, verbose_name='Кол-во спальных мест')
     commission = models.PositiveSmallIntegerField(null=True, blank=True, default=0, verbose_name='Комиссия')
     photo = models.ImageField(upload_to='photos/estate', verbose_name='Фото', null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.price} - {self.floor}/{self.max_floor}'
 
     class Meta:
         verbose_name = "Аренда недвижимости"
@@ -215,6 +231,9 @@ class TransportModel(BaseModel):
     commission = models.PositiveSmallIntegerField(null=True, blank=True, default=0, verbose_name='Комиссия')
     air_conditioner = models.BooleanField(default=False, verbose_name='Нал кондера', null=True, blank=True)
 
+    def __str__(self):
+        return f'{self.mark} - {self.model}'
+
     class Meta:
         verbose_name = "Аренда транспорта"
         verbose_name_plural = "Аренда транспорта"
@@ -230,8 +249,12 @@ class WorkModel(BaseModel):
     )
 
     name_vacancy = models.CharField(max_length=64, verbose_name='Название вакансии')
-    period = models.CharField(choices=CHOICES_PERIOD, max_length=1, verbose_name='Период') # для отображения периода оплаты. Price/period
+    period = models.CharField(choices=CHOICES_PERIOD, max_length=1,
+                              verbose_name='Период')  # для отображения периода оплаты. Price/period
     photo = models.ImageField(upload_to='photos/work', verbose_name='Фото', null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.name_vacancy} - {self.period}'
 
     class Meta:
         verbose_name = "Работа"
@@ -249,7 +272,7 @@ class ServicesModel(BaseModel):
 
     name_service = models.ForeignKey(NameServiceModel, on_delete=models.PROTECT)
     unit = models.CharField(choices=CHOICES_UNIT, max_length=1, verbose_name="Единица измерения")
-    photo = models.ImageField(upload_to='photos/event', verbose_name='Фото', null=True, blank=True)
+    photo = models.ImageField(upload_to='photos/services', verbose_name='Фото', null=True, blank=True)
 
     def __str__(self):
         return f'{self.name_service} - {self.price}'
@@ -257,6 +280,61 @@ class ServicesModel(BaseModel):
     class Meta:
         verbose_name = "Услуга"
         verbose_name_plural = "Услуги"
+
+
+class CurrencyModel(models.Model):
+    """Валютные пары (до 5 шт)"""
+
+    name_currency_1_1 = models.ForeignKey(NameCurrencyModel, on_delete=models.PROTECT, related_name='currency_1_1',
+                                          verbose_name='Валюта 1_1')
+    name_currency_1_2 = models.ForeignKey(NameCurrencyModel, on_delete=models.PROTECT, related_name='currency_1_2',
+                                          verbose_name='Валюта 1_2')
+    price_1 = models.DecimalField(decimal_places=2, max_digits=10, default=0, verbose_name='Цена_1')
+
+    name_currency_2_1 = models.ForeignKey(NameCurrencyModel, on_delete=models.PROTECT, related_name='currency_2_1',
+                                          null=True, blank=True, verbose_name='Валюта 2_1')
+    name_currency_2_2 = models.ForeignKey(NameCurrencyModel, on_delete=models.PROTECT, related_name='currency_2_2',
+                                          null=True, blank=True, verbose_name='Валюта 2_2')
+    price_2 = models.DecimalField(decimal_places=2, max_digits=10, default=0, null=True, blank=True,
+                                  verbose_name='Цена_2')
+
+    name_currency_3_1 = models.ForeignKey(NameCurrencyModel, on_delete=models.PROTECT, related_name='currency_3_1',
+                                          null=True, blank=True, verbose_name='Валюта 3_1')
+    name_currency_3_2 = models.ForeignKey(NameCurrencyModel, on_delete=models.PROTECT, related_name='currency_3_2',
+                                          null=True, blank=True, verbose_name='Валюта 3_2')
+    price_3 = models.DecimalField(decimal_places=2, max_digits=10, default=0, null=True, blank=True,
+                                  verbose_name='Цена_3')
+
+    name_currency_4_1 = models.ForeignKey(NameCurrencyModel, on_delete=models.PROTECT, related_name='currency_4_1',
+                                          null=True, blank=True, verbose_name='Валюта 4_1')
+    name_currency_4_2 = models.ForeignKey(NameCurrencyModel, on_delete=models.PROTECT, related_name='currency_4_2',
+                                          null=True, blank=True, verbose_name='Валюта 4_2')
+    price_4 = models.DecimalField(decimal_places=2, max_digits=10, default=0, null=True, blank=True,
+                                  verbose_name='Цена_4')
+
+    name_currency_5_1 = models.ForeignKey(NameCurrencyModel, on_delete=models.PROTECT, related_name='currency_5_1',
+                                          null=True, blank=True, verbose_name='Валюта 5_1')
+    name_currency_5_2 = models.ForeignKey(NameCurrencyModel, on_delete=models.PROTECT, related_name='currency_5_2',
+                                          null=True, blank=True, verbose_name='Валюта 5_2')
+    price_5 = models.DecimalField(decimal_places=2, max_digits=10, default=0, null=True, blank=True,
+                                  verbose_name='Цена_5')
+
+    delivery = models.BooleanField(default=False, verbose_name='Доставка')
+    contact = models.ForeignKey(User, on_delete=models.CASCADE, null=True, verbose_name='Создатель модели')
+    description = models.CharField(max_length=2048, verbose_name='Описание')
+    is_public = models.BooleanField(default=True, verbose_name='Публикация')
+    date_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    date_update = models.DateTimeField(auto_now=True, verbose_name='Дата редактирования')
+    location = models.ManyToManyField('LocationModel', verbose_name='Локация', blank=True)  # временное решение
+    # проработать нужно добавление карты, отображение города
+    slug = models.SlugField(blank=True, null=True, db_index=True, unique=True, verbose_name='Ссылка')
+
+    def __str__(self):
+        return f'{self.name_currency_1_1}/{self.name_currency_1_2} - {self.price_1}'
+
+    class Meta:
+        verbose_name = "Валютная пара"
+        verbose_name_plural = "Валютные пары"
 
 
 class BuySellModel(BaseModel):
@@ -270,31 +348,41 @@ class BuySellModel(BaseModel):
     name_product = models.CharField(max_length=64, verbose_name='Название продукта')
     unit = models.CharField(choices=CHOICES_UNIT, max_length=1, verbose_name="Единица измерения")
     delivery = models.BooleanField(default=False, verbose_name='Доставка')
+    photo = models.ImageField(upload_to='photos/buy_sell', verbose_name='Фото', null=True, blank=True)
 
+    def __str__(self):
+        return f'{self.name_product} - {self.price}'
 
-# class CurrencyModel(BaseModel):
-#     """Валютные пары
-#     Доделать логику"""
-#
-#     name_currency_1 = models.ForeignKey(NameCurrencyModel, on_delete=models.PROTECT)
-#     name_currency_2 = models.ForeignKey(NameCurrencyModel, on_delete=models.PROTECT)
-#     price_2 = models.PositiveIntegerField(default=0, verbose_name='Цена')
-#     price_3 = models.PositiveIntegerField(default=0, verbose_name='Цена')
-#     border_1 = models.PositiveIntegerField(default=0, verbose_name='Граница изменения курса')
-#     border_2 = models.PositiveIntegerField(default=0, verbose_name='Граница изменения курса')
-#     delivery = models.BooleanField(default=False, verbose_name='Доставка')
+    class Meta:
+        verbose_name = "Покупка/продажа"
+        verbose_name_plural = "Покупка/продажа"
 
 
 class FoodModel(BuySellModel):
     """Домашняя еда"""
-    pass
+
+    new_photo = models.ImageField(upload_to='photos/food', verbose_name='Фото_new', null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Домашняя еда"
+        verbose_name_plural = "Домашняя еда"
 
 
 class TaxiModel(BuySellModel):
-    """Taxi"""
-    pass
+    """Такси"""
+
+    new_photo = models.ImageField(upload_to='photos/taxi', verbose_name='Фото_new', null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Такси"
+        verbose_name_plural = "Такси"
 
 
 class TripModel(BuySellModel):
     """Экскурсии"""
-    pass
+
+    new_photo = models.ImageField(upload_to='photos/trip', verbose_name='Фото_new', null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Экскурсия"
+        verbose_name_plural = "Экскурсии"
