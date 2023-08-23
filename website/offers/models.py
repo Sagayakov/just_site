@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 
 class BaseModel(models.Model):
@@ -8,6 +9,7 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
 
+    name_offer = models.CharField(max_length=64, verbose_name='Название объявления')
     price = models.PositiveIntegerField(default=0, verbose_name='Цена')
     contact = models.ForeignKey(User, on_delete=models.CASCADE, null=True, verbose_name='Создатель модели')
     description = models.CharField(max_length=2048, verbose_name='Описание')
@@ -17,6 +19,11 @@ class BaseModel(models.Model):
     location = models.ManyToManyField('LocationModel', verbose_name='Локация', blank=True)  # временное решение
     # проработать нужно добавление карты, отображение города
     slug = models.SlugField(blank=True, null=True, db_index=True, unique=True, verbose_name='Ссылка')
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = datetime.now().strftime("%Y%m%d%H%M%S%f")
+        super().save(*args, **kwargs)
 
 
 class BaseSlugModel(models.Model):
@@ -28,7 +35,7 @@ class BaseSlugModel(models.Model):
         abstract = True
 
 
-class LocationModel(models.Model):
+class LocationModel(BaseSlugModel):
     """ForeignKey. Место расположения объявления"""
 
     location = models.CharField(max_length=64, verbose_name='Город/район')
@@ -107,16 +114,16 @@ class ValidityVisaModel(BaseSlugModel):
 
 
 class NameServiceModel(BaseSlugModel):
-    """ForeignKey. Наименование услуги"""
+    """ForeignKey. Вид услуги"""
 
-    validity = models.CharField(max_length=64, verbose_name='Наименование услуги')  # маникюр, обучение игры на гитаре
+    kind = models.CharField(max_length=64, verbose_name='Вид услуги')  # маникюр, обучение игры на гитаре
 
     def __str__(self):
-        return f'{self.validity}'
+        return f'{self.kind}'
 
     class Meta:
-        verbose_name = "F Наименование услуги"
-        verbose_name_plural = "F Наименование услуг"
+        verbose_name = "F Вид услуги"
+        verbose_name_plural = "F Вид услуг"
 
 
 class NameCurrencyModel(BaseSlugModel):
