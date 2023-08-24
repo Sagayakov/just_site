@@ -27,7 +27,6 @@ class LocationAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('location',)}
 
 
-
 @admin.register(MarkTransportModel)
 class MarkTransportAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('mark_tr',)}
