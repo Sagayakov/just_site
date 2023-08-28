@@ -19,6 +19,7 @@ class BaseModel(models.Model):
     location = models.ManyToManyField('LocationModel', verbose_name='Локация', blank=True)  # временное решение
     # проработать нужно добавление карты, отображение города
     slug = models.SlugField(blank=True, null=True, db_index=True, unique=True, verbose_name='Ссылка')
+    priority = models.BooleanField(default=False, verbose_name='Приоритетное размещение')
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -477,7 +478,8 @@ class BuySellModel(BaseModel):
     CHOICES_UNIT = (
         (1, 'Шт'),
         (2, "Кг"),
-        (3, "Гр")
+        (3, "Гр"),
+        (4, "Другое")
     )
     unit = models.PositiveSmallIntegerField(choices=CHOICES_UNIT, verbose_name="Единица измерения")  # price/unit
     delivery = models.BooleanField(default=False, verbose_name='Доставка')
@@ -497,7 +499,8 @@ class FoodModel(BaseModel):
     CHOICES_UNIT = (
         (1, 'Шт'),
         (2, "Кг"),
-        (3, "Гр")
+        (3, "Гр"),
+        (4, "Другое")
     )
     unit = models.PositiveSmallIntegerField(choices=CHOICES_UNIT, verbose_name="Единица измерения")
     delivery = models.BooleanField(default=False, verbose_name='Доставка')
@@ -538,7 +541,8 @@ class TripModel(BaseModel):
     CHOICES_UNIT = (
         (1, 'Единица'),
         (2, "Час"),
-        (3, "День")
+        (3, "День"),
+        (4, 'Другое')
     )
     unit = models.PositiveSmallIntegerField(choices=CHOICES_UNIT, verbose_name="Единица измерения")
     photo = models.ImageField(upload_to='photos/trip', verbose_name='Фото', null=True, blank=True)
